@@ -23,6 +23,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"hash/crc32"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -176,6 +177,15 @@ func (s *DateYearShard) FindForKey(key interface{}) (int, error) {
 		tm := time.Unix(val, 0)
 		return tm.Year(), nil
 	case string:
+		if regexp.MustCompile(`[1-9]\d{9}`).MatchString(val) { //时间戳字符串
+			varint64, err := strconv.ParseInt(val, 10, 64)
+			if err != nil {
+				return 0, err
+			} else {
+				return s.FindForKey(varint64)
+			}
+		}
+
 		if v, err := strconv.Atoi(val[:4]); err != nil {
 			panic(NewKeyError("invalid num format %v", v))
 		} else {
@@ -220,6 +230,15 @@ func (s *DateMonthShard) FindForKey(key interface{}) (int, error) {
 		}
 		return yearMonth, nil
 	case string:
+		if regexp.MustCompile(`[1-9]\d{9}`).MatchString(val) { //时间戳字符串
+			varint64, err := strconv.ParseInt(val, 10, 64)
+			if err != nil {
+				return 0, err
+			} else {
+				return s.FindForKey(varint64)
+			}
+		}
+
 		if len(val) < len(timeFormat) {
 			return 0, fmt.Errorf("invalid date format %s", val)
 		}
@@ -268,6 +287,15 @@ func (s *DateDayShard) FindForKey(key interface{}) (int, error) {
 		}
 		return yearMonthDay, nil
 	case string:
+		if regexp.MustCompile(`[1-9]\d{9}`).MatchString(val) { //时间戳字符串
+			varint64, err := strconv.ParseInt(val, 10, 64)
+			if err != nil {
+				return 0, err
+			} else {
+				return s.FindForKey(varint64)
+			}
+		}
+
 		if len(val) < len(timeFormat) {
 			return 0, fmt.Errorf("invalid date format %s", val)
 		}
