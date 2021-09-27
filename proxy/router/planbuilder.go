@@ -628,6 +628,7 @@ func makeGtList(value int, indexes []int) []int {
 func makeBetweenList(start, end int, indexes []int) []int {
 	var startIndex, endIndex int
 	var SetStart bool
+	var SetEnd bool
 	if end < start {
 		start, end = end, start
 	}
@@ -639,11 +640,25 @@ func makeBetweenList(start, end int, indexes []int) []int {
 		}
 		if v == end {
 			endIndex = k
-			if SetStart {
-				return indexes[startIndex : endIndex+1]
-			}
+			SetEnd = true
+			// if SetStart {
+			// 	return indexes[startIndex : endIndex+1]
+			// }
 		}
 	}
+
+	var list []int
+	if SetStart && SetEnd {
+		list = indexes[startIndex : endIndex+1]
+	} else if !SetStart && SetEnd {
+		list = indexes[0 : endIndex+1]
+	} else if SetStart && !SetEnd {
+		list = indexes[startIndex:(len(indexes) + 0)]
+	} else {
+		list = indexes[:1]
+	}
+	return list
+
 	return nil
 }
 
