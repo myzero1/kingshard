@@ -91,3 +91,17 @@ kingshard开源以来，经过不断地迭代开发，功能较为完善，稳�
 ## License
 
 kingshard采用Apache 2.0协议，相关协议请参看[目录](./doc/License)
+
+## myzero1
+```
+问题
+Windows上报 SIGUSR1 not declared by package syscall
+https://blog.csdn.net/qq_28466271/article/details/116521955
+https://www.cnblogs.com/JasonCeng/p/15074866.html
+直接使用 types_windows.go 替换 path\to\src\syscall\types_windows.go 文件
+
+
+
+
+
+```
