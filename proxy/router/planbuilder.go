@@ -450,7 +450,23 @@ func (plan *Plan) getTableIndexsByTuple(valExpr sqlparser.ValExpr) ([]int, error
 	}
 
 	sort.Ints(shardlist)
+	return intersect(shardlist, plan.Rule.SubTableIndexs), nil
 	return shardlist, nil
+}
+
+func intersect(nums1 []int, nums2 []int) []int {
+	res := make([]int, 0)
+	map1 := map[int]int{}
+	for _, v := range nums1 {
+		map1[v] += 1
+	}
+	for _, v := range nums2 {
+		if map1[v] > 0 {
+			res = append(res, v)
+			map1[v] -= 1
+		}
+	}
+	return res
 }
 
 //get the insert table index and set plan.Rows
