@@ -1,6 +1,6 @@
 # server listen addr
 # addr : 0.0.0.0:9696
-addr : 0.0.0.0:3306
+addr : 0.0.0.0:13306
 
 # prometheus server listen addr
 prometheus_addr : 0.0.0.0:7080
@@ -55,7 +55,8 @@ nodes :
     password : root
 
     # master represents a real mysql master server 
-    master : dev_sj__mysql0:3306
+    # master : dev_sj__mysql0:3306
+    master : 192.168.121.130:35121
 
     # slave represents a real mysql salve server,and the number after '@' is 
     # read load weight of this slave.
