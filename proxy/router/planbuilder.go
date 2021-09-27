@@ -215,6 +215,14 @@ func (plan *Plan) getDateShardTableIndex(expr sqlparser.BoolExpr) ([]int, error)
 			if err != nil {
 				return nil, err
 			}
+
+			for _, v := range plan.Rule.SubTableIndexs {
+				if v == index {
+					return []int{index}, nil
+				}
+			}
+			return plan.Rule.SubTableIndexs[:1], nil
+
 			return []int{index}, nil
 		case "<", "<=":
 			if plan.getValueType(criteria.Left) == EID_NODE {
@@ -555,6 +563,7 @@ func makeLeList(value int, indexes []int) []int {
 			return indexes[:k+1]
 		}
 	}
+	return indexes[(len(indexes) - 1):]
 	return nil
 }
 
@@ -567,6 +576,7 @@ func makeGeList(value int, indexes []int) []int {
 			return indexes[k:]
 		}
 	}
+	return indexes[:1]
 	return nil
 }
 
@@ -579,6 +589,7 @@ func makeLtList(value int, indexes []int) []int {
 			return indexes[:k]
 		}
 	}
+	return indexes[(len(indexes) - 1):]
 	return nil
 }
 
@@ -591,6 +602,7 @@ func makeGtList(value int, indexes []int) []int {
 			return indexes[k+1:]
 		}
 	}
+	return indexes[:1]
 	return nil
 }
 
