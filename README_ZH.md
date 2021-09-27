@@ -100,6 +100,17 @@ https://blog.csdn.net/qq_28466271/article/details/116521955
 https://www.cnblogs.com/JasonCeng/p/15074866.html
 直接使用 types_windows.go 替换 path\to\src\syscall\types_windows.go 文件
 
+-------- 分割线 -----------
+
+分表字段按照时间分表时，使用时间戳的时候，不能写成字符串，分片字段的，数据类型的影响，特别是在用  date_xxx  分片时，proxy\router\shard.go 	224行
+
+-------- 分割线 -----------
+
+插入数据时，本来时插入一条，但是一次传入了 很多条，而且总条数和分表数一致
+
+-------- 分割线 -----------
+
+若没找到对应分表会报错---shardingproxy不会，当找不到分表的索引时，直接走默认索引
 
 
 
