@@ -1,0 +1,1 @@
+GOOS=linux go build -ldflags "-X \"main.BuildVersion=$(git rev-parse --short HEAD || echo "GitNotFound")\" -X \"main.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')\"" -o ./kingshard-linux ./cmd/kingshard/main.go
