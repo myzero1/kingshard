@@ -729,22 +729,26 @@ func (r *Router) generateInsertSql(plan *Plan, stmt sqlparser.Statement) error {
 			sqlTmp := buf.String()
 			// fmt.Println(`======0=========`, sqlTmp)
 
-			sqlTmp = strings.Replace(sqlTmp, ") values (", ",id) values   (", 1)
+			if strings.Contains(sqlTmp, `(id, `) &&
+				strings.Contains(sqlTmp, `, id, `) &&
+				strings.Contains(sqlTmp, `, add_time) `) {
+				sqlTmp = strings.Replace(sqlTmp, ") values (", ",id) values   (", 1)
 
-			goReplace := true
-			for goReplace {
-				id, _ := sony.NextID()
-				sqlTmpOld := sqlTmp
-				sqlTmp = strings.Replace(sqlTmp, "), (", fmt.Sprintf(`, %d),   (`, id), 1)
-				if sqlTmpOld == sqlTmp {
-					goReplace = false
+				goReplace := true
+				for goReplace {
+					id, _ := sony.NextID()
+					sqlTmpOld := sqlTmp
+					sqlTmp = strings.Replace(sqlTmp, "), (", fmt.Sprintf(`, %d),   (`, id), 1)
+					if sqlTmpOld == sqlTmp {
+						goReplace = false
+					}
 				}
-			}
 
-			sqlTmp = sqlTmp[:len(sqlTmp)-1]
-			id, _ := sony.NextID()
-			sqlTmp = fmt.Sprintf(`%s,%v)`, sqlTmp, id)
-			// fmt.Println(`======1=========`, sqlTmp)
+				sqlTmp = sqlTmp[:len(sqlTmp)-1]
+				id, _ := sony.NextID()
+				sqlTmp = fmt.Sprintf(`%s,%v)`, sqlTmp, id)
+				// fmt.Println(`======1=========`, sqlTmp)
+			}
 
 			sqls[nodeName] = append(sqls[nodeName], sqlTmp)
 		}
