@@ -574,12 +574,18 @@ func makeList(start, end int) []int {
 //if value is 2016, and indexs is [2015,2016,2017]
 //the result is [2015,2016]
 func makeLeList(value int, indexes []int) []int {
+	last := len(indexes) - 1
+	if value >= indexes[last] {
+		return indexes
+	} else if value <= indexes[0] {
+		return indexes[:1]
+	}
+
 	for k, v := range indexes {
 		if v == value {
 			return indexes[:k+1]
 		}
 	}
-	return indexes[(len(indexes) - 1):]
 	return nil
 }
 
@@ -587,12 +593,18 @@ func makeLeList(value int, indexes []int) []int {
 //if value is 2016, and indexs is [2015,2016,2017,2018]
 //the result is [2016,2017,2018]
 func makeGeList(value int, indexes []int) []int {
+	last := len(indexes) - 1
+	if value >= indexes[last] {
+		return indexes[last:]
+	} else if value <= indexes[0] {
+		return indexes
+	}
+
 	for k, v := range indexes {
 		if v == value {
 			return indexes[k:]
 		}
 	}
-	return indexes[:1]
 	return nil
 }
 
@@ -600,6 +612,13 @@ func makeGeList(value int, indexes []int) []int {
 //if value is 2016, and indexs is [2015,2016,2017,2018]
 //the result is [2015]
 func makeLtList(value int, indexes []int) []int {
+	last := len(indexes) - 1
+	if value >= indexes[last] {
+		return indexes
+	} else if value <= indexes[0] {
+		return indexes[:1]
+	}
+
 	for k, v := range indexes {
 		if v == value {
 			return indexes[:k]
@@ -613,12 +632,18 @@ func makeLtList(value int, indexes []int) []int {
 //if value is 2016, and indexs is [2015,2016,2017,2018]
 //the result is [2017,2018]
 func makeGtList(value int, indexes []int) []int {
+	last := len(indexes) - 1
+	if value >= indexes[last] {
+		return indexes[last:]
+	} else if value <= indexes[0] {
+		return indexes
+	}
+
 	for k, v := range indexes {
 		if v == value {
 			return indexes[k+1:]
 		}
 	}
-	return indexes[:1]
 	return nil
 }
 
