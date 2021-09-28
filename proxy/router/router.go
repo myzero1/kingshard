@@ -22,6 +22,7 @@ import (
 	"github.com/flike/kingshard/core/errors"
 	"github.com/flike/kingshard/core/golog"
 	"github.com/flike/kingshard/sqlparser"
+	"github.com/sony/sonyflake"
 )
 
 var (
@@ -722,7 +723,15 @@ func (r *Router) generateInsertSql(plan *Plan, stmt sqlparser.Statement) error {
 			if _, ok := sqls[nodeName]; ok == false {
 				sqls[nodeName] = make([]string, 0, tableCount)
 			}
-			sqls[nodeName] = append(sqls[nodeName], buf.String())
+			// sqls[nodeName] = append(sqls[nodeName], buf.String())
+
+			sqlTmp := buf.String()
+			sqlTmp = strings.Replace(sqlTmp, ") values (", ",id) values (", 1)
+			sqlTmp = sqlTmp[:len(sqlTmp)-1]
+			id, _ := sonyflake.NewSonyflake(sonyflake.Settings{}).NextID()
+			sqlTmp = fmt.Sprintf(`%s,%v)`, sqlTmp, id)
+
+			sqls[nodeName] = append(sqls[nodeName], sqlTmp)
 		}
 
 	}
