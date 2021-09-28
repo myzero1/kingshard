@@ -725,11 +725,26 @@ func (r *Router) generateInsertSql(plan *Plan, stmt sqlparser.Statement) error {
 			}
 			// sqls[nodeName] = append(sqls[nodeName], buf.String())
 
+			sony := sonyflake.NewSonyflake(sonyflake.Settings{})
 			sqlTmp := buf.String()
-			sqlTmp = strings.Replace(sqlTmp, ") values (", ",id) values (", 1)
+			// fmt.Println(`======0=========`, sqlTmp)
+
+			sqlTmp = strings.Replace(sqlTmp, ") values (", ",id) values   (", 1)
+
+			goReplace := true
+			for goReplace {
+				id, _ := sony.NextID()
+				sqlTmpOld := sqlTmp
+				sqlTmp = strings.Replace(sqlTmp, "), (", fmt.Sprintf(`, %d),   (`, id), 1)
+				if sqlTmpOld == sqlTmp {
+					goReplace = false
+				}
+			}
+
 			sqlTmp = sqlTmp[:len(sqlTmp)-1]
-			id, _ := sonyflake.NewSonyflake(sonyflake.Settings{}).NextID()
+			id, _ := sony.NextID()
 			sqlTmp = fmt.Sprintf(`%s,%v)`, sqlTmp, id)
+			// fmt.Println(`======1=========`, sqlTmp)
 
 			sqls[nodeName] = append(sqls[nodeName], sqlTmp)
 		}
